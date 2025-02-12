@@ -11,19 +11,24 @@ import CoreLocation
 final class GGAParser: NMEASentenceParser {
     // MARK: - Attributes
     
-    // The NMEA identifier for GGA sentences.
-    static let sentenceIdentifier = "$GNGGA"
+    /// The valid NMEA identifiers for GGA sentences from various constellations.
+    static let validSentenceIdentifiers = GGAData.Identifiers.allCases.map { $0.rawValue }
     
     // MARK: - Public Methods
     
     /// Parses a raw GGA sentence string.
     func parse(sentence: String) throws -> GGAData {
-        // 1. Validate that the sentence starts with '$'
+        // Validate that the sentence starts with '$'
         guard sentence.first == "$" else {
             throw NMEAParserError.invalidFormat
         }
         
-        // 2. Validate checksum
+        // Validate that the sentence identifier is one of the supported types.
+        guard GGAParser.validSentenceIdentifiers.contains(where: { sentence.hasPrefix($0) }) else {
+            throw NMEAParserError.invalidFormat
+        }
+        
+        // Validate checksum
         let parts = sentence.components(separatedBy: "*")
         guard parts.count == 2,
               let dataPart = parts.first,
@@ -36,19 +41,16 @@ final class GGAParser: NMEASentenceParser {
             throw NMEAParserError.checksumMismatch(expected: checksumPart, computed: computedChecksumStr)
         }
         
-        // 3. Split fields by comma.
-        // Remove the leading "$" before splitting if desired.
+        //  Split fields by comma.
         let trimmedDataPart = String(dataPart.dropFirst())
         let fields = trimmedDataPart.components(separatedBy: ",")
         
-        // Ensure we have at least 10 fields (per your original enum)
+        // Ensure we have at least the expected number of fields.
         guard fields.count > 9 else {
             throw NMEAParserError.insufficientFields(expected: 10, got: fields.count)
         }
         
-        // 4. Parse individual fields using safe unwrapping.
-        // Field positions are defined by the GGA sentence:
-        // 0: "GNGGA", 1: time, 2: latitude, 3: latitude direction, 4: longitude, 5: longitude direction, etc.
+        // Parse individual fields.
         let timeField = fields[1]
         
         guard let rawLat = Double(fields[2]) else {
@@ -91,9 +93,7 @@ final class GGAParser: NMEASentenceParser {
     
     /// Computes the checksum by XOR-ing all characters between "$" and "*" (not inclusive).
     private func computeChecksum(for dataPart: String) -> UInt8 {
-        // Ensure that we start computing AFTER the '$'
         let trimmedData = dataPart.dropFirst() // Remove '$'
-        
         var checksum: UInt8 = 0
         for char in trimmedData.utf8 {
             checksum ^= char

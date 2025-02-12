@@ -14,30 +14,24 @@ public final class NMEAParserManager {
     
     // Publishers for different parsed outputs.
     private let ggaSubject = PassthroughSubject<GGAData, Never>()
+    private let rawGGASubject = PassthroughSubject<String, Never>()
+    var ggaPublisher: AnyPublisher<GGAData, Never> { ggaSubject.eraseToAnyPublisher() }
+    var rawGGAPublisher: AnyPublisher<String, Never> { rawGGASubject.eraseToAnyPublisher() }
     
-    /// Exposes a stream of parsed GGA data.
-    var ggaPublisher: AnyPublisher<GGAData, Never> {
-        return ggaSubject.eraseToAnyPublisher()
-    }
-    
+    // The GGAParser instance.
     private let ggaParser = GGAParser()
-    
-    // MARK: - Init
-    
-    private init() { }
     
     // MARK: - Public Methods
     
     /// Parses a raw NMEA sentence and routes it to the correct parser.
     public func parse(sentence: String) {
-        // Check the sentence type.
-        if sentence.hasPrefix(GGAParser.sentenceIdentifier) {
+        // Check if the sentence starts with any supported GGA identifier.
+        if GGAParser.validSentenceIdentifiers.contains(where: { sentence.hasPrefix($0) }) {
             do {
                 let data = try ggaParser.parse(sentence: sentence)
+                rawGGASubject.send(sentence)
                 ggaSubject.send(data)
             } catch {
-                // Log the error, notify listeners via a separate error publisher,
-                // or handle it however is appropriate for your app.
                 print("Error parsing GGA sentence: \(error)")
             }
         } else {

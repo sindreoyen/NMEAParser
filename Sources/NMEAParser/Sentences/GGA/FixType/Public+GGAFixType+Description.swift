@@ -44,7 +44,7 @@ public extension GGAFixType {
         case .invalid:
             return "Invalid"
         case .autonomous:
-            return "Autonomous"
+            return "GPS"
         case .dgps:
             return "DGPS"
         case .pps:
