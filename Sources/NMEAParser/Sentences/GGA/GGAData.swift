@@ -11,13 +11,13 @@ import CoreLocation
 /// Holds parsed data from a GGA sentence.
 public struct GGAData {
     // MARK: - Attributes
-    let time: String?
-    let latitude: CLLocationDegrees
-    let longitude: CLLocationDegrees
-    let fixType: GGAFixType
-    let satellitesUsed: UInt8
-    let hdop: Double
-    let altitude: Double
+    public let time: String?
+    public let latitude: CLLocationDegrees
+    public let longitude: CLLocationDegrees
+    public let fixType: GGAFixType
+    public let satellitesUsed: UInt8
+    public let hdop: Double
+    public let altitude: Double
     
     // MARK: - Identifiers
     /// The identifiers of the NMEA sentence with the GGA data.

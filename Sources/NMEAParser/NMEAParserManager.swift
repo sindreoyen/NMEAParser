@@ -14,11 +14,14 @@ import Foundation
 /// and then routes them to a dedicated parser. On successful parsing, it publishes both the raw sentence
 /// and the parsed `GGAData` using Combine publishers. It also offers a thread-safe configuration
 /// for enabling or disabling specific GGA sentence identifiers.
-public final actor NMEAParserManager {
+public final class NMEAParserManager {
     // MARK: - Attributes
     
     /// The shared singleton instance of `NMEAParserManager`.
-    public static let shared = NMEAParserManager()
+    /// - Note: shared mutable states are synchronized using `syncQueue`.
+    /// Thus, this singleton is thread-safe for reading and writing and
+    /// the nonisolated(unsafe) can be ignored.
+    nonisolated(unsafe) public static let shared = NMEAParserManager()
     
     // MARK: Publishers
     /// Publishes successfully parsed `GGAData` objects.
@@ -71,13 +74,35 @@ public final actor NMEAParserManager {
      Otherwise, the sentence is ignored (with an informational log).
      
      - Parameter sentence: The raw NMEA sentence string.
+     - Parameter verbose: Whether the method should print verbose logs. Defaults to `false`.
      */
-    public func process(sentence: String) {
+    public func process(sentence: String, verbose: Bool = false) {
         if isSupportedGGASentence(sentence) {
             processGGASentence(sentence)
         } else {
             print("Unsupported sentence type: \(sentence)")
         }
+    }
+    
+    /// Processes a raw NMEA sentence in Data format.
+    /// 
+    /// This method first checks whether the incoming sentence is a supported GGA sentence.
+    /// If it is, the sentence is parsed and both the raw sentence and parsed data are published.
+    /// Otherwise, the sentence is ignored (with an informational log).
+    /// 
+    /// - Parameters:
+    ///   - sentence: the raw NMEA sentence in Data format.
+    ///   - encoding: the encoding to use when converting the Data to a String. Defaults to `.ascii`.
+    ///   - verbose: whether the method should print verbose logs. Defaults to `false`.
+    /// - Warning: By default,`.ascii` is used for the conversion to a String. If it fails, the sentence is ignored.
+    /// Make sure to use the correct encoding if the data is not ASCII encoded.
+    public func process(sentence: Data?,
+                        encoding: String.Encoding = .ascii,
+                        verbose: Bool = false) {
+        guard let sentence, let sentenceString = String(data: sentence, encoding: encoding) else {
+            return
+        }
+        process(sentence: sentenceString, verbose: verbose)
     }
     
     // MARK: - Private Methods
@@ -101,14 +126,15 @@ public final actor NMEAParserManager {
      sentence via `rawGGASentenceSubject` and the parsed data via `ggaDataSubject`. Parsing errors are logged.
      
      - Parameter sentence: The raw GGA sentence string.
+     - Parameter verbose: whether the method should print verbose logs. Defaults to `false`.
      */
-    private func processGGASentence(_ sentence: String) {
+    private func processGGASentence(_ sentence: String, verbose: Bool = false) {
         do {
             let parsedData = try ggaParser.parse(sentence: sentence)
             rawGGASentenceSubject.send(sentence)
             ggaDataSubject.send(parsedData)
         } catch {
-            print("Error parsing GGA sentence: \(error)")
+            if verbose { print("Error parsing GGA sentence: \(error)") }
         }
     }
 }
