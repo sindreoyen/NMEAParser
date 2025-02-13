@@ -9,7 +9,8 @@ import Foundation
 import CoreLocation
 
 /// Holds parsed data from a GGA sentence.
-struct GGAData {
+public struct GGAData {
+    // MARK: - Attributes
     let time: String?
     let latitude: CLLocationDegrees
     let longitude: CLLocationDegrees
@@ -18,9 +19,10 @@ struct GGAData {
     let hdop: Double
     let altitude: Double
     
+    // MARK: - Identifiers
     /// The identifiers of the NMEA sentence with the GGA data.
     /// - Note: The identifiers are separated by the global navigation satellite system (GNSS) they belong to.
-    enum Identifiers: String, CaseIterable {
+    public enum Identifier: String, CaseIterable {
         case gnGGA = "$GNGGA" // GGA sentence from GPS and GLONASS
         case gpGGA = "$GPGGA" // GGA sentence from GPS
         case glGGA = "$GLGGA" // GGA sentence from GLONASS

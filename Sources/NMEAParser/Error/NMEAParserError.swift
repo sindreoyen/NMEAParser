@@ -11,6 +11,7 @@ enum NMEAParserError: Error, CustomStringConvertible {
     case insufficientFields(expected: Int, got: Int)
     case checksumMismatch(expected: String, computed: String)
     case invalidField(fieldName: String)
+    case unsupportedIdentifier(identifier: String)
     
     // MARK: - CustomStringConvertible
     var description: String {
@@ -23,6 +24,8 @@ enum NMEAParserError: Error, CustomStringConvertible {
             return "Checksum mismatch: expected \(expected) but computed \(computed)."
         case let .invalidField(fieldName):
             return "Could not parse field '\(fieldName)'."
+        case let .unsupportedIdentifier(identifier):
+            return "Unsupported sentence identifier: \(identifier)."
         }
     }
 }

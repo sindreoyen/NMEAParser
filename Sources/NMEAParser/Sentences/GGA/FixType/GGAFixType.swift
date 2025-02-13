@@ -6,7 +6,6 @@
 //
 
 public enum GGAFixType: UInt8 {
-    
     // MARK: - Cases
     
     /// Invalid, no position available.
