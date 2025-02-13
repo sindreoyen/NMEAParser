@@ -48,7 +48,7 @@ public final class NMEAParserManager {
     private let syncQueue = DispatchQueue(label: "com.nmea.parser.manager.syncQueue")
     
     /// The enabled GGA sentence identifiers. Access is thread safe.
-    public var ggaIdentifiers: Set<GGAData.Identifier> {
+    public var supportedGGAIdentifiers: Set<GGAData.Identifier> {
         get { syncQueue.sync { enabledGGAIdentifiers } }
         set { syncQueue.sync { enabledGGAIdentifiers = newValue } }
     }
@@ -78,8 +78,8 @@ public final class NMEAParserManager {
      */
     public func process(sentence: String, verbose: Bool = false) {
         if isSupportedGGASentence(sentence) {
-            processGGASentence(sentence)
-        } else {
+            processGGASentence(sentence, verbose: verbose)
+        } else if verbose {
             print("Unsupported sentence type: \(sentence)")
         }
     }
@@ -116,7 +116,7 @@ public final class NMEAParserManager {
      - Returns: `true` if the sentence is a supported GGA sentence; otherwise, `false`.
      */
     private func isSupportedGGASentence(_ sentence: String) -> Bool {
-        return ggaIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
+        return supportedGGAIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
     }
     
     /**
