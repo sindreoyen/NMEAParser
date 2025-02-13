@@ -11,8 +11,8 @@
 - [x] Checksum Validation 
 - [x] Descriptions for Fix Types
 - [x] GGA Sentences
-- [] RMC Sentences (coming!)
-- [] GSV Sentences (coming!)
+- [ ] RMC Sentences (coming!)
+- [ ] GSV Sentences (coming!)
 
 ## Requirements
 
@@ -39,6 +39,14 @@ dependencies: [
     .package(url: "https://github.com/sindreoyen/NMEAParser.git", .upToNextMajor(from: "1.0.1"))
 ]
 ```
+
+## Usage
+
+### Configuring the Parser Instance
+
+### Parsing NMEA Sentences
+
+### Listening to Parsed Data
 
 ## Contributing
 
