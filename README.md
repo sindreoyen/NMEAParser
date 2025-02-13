@@ -4,7 +4,7 @@
 [![Platforms](https://img.shields.io/badge/Platforms-macOS_iOS_iPadOS-yellowgreen?style=flat-square)](https://img.shields.io/badge/Platforms-macOS_iOS-Green?style=flat-square)
 [![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)
 
-NMEAParser is a Swift package designed to validate and parse National Marine Electronics Association (NMEA) sentences in real-time. It acts as a seamless bridge between your application and GNSS receivers, converting raw NMEA data into a Swift-friendly format—making real-time integration effortless.
+NMEAParser is a Swift package designed to validate and parse National Marine Electronics Association (NMEA) sentences in real time. It is a seamless bridge between your application and GNSS receivers, converting raw NMEA data into a Swift-friendly format—making real-time integration effortless.
 
 ## 1 Features
 
@@ -30,7 +30,7 @@ NMEAParser is a Swift package designed to validate and parse National Marine Ele
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
 
-Once you have your Swift package set up, adding NMEAPArser as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift` or the Package list in Xcode.
+Once you set up your Swift package, adding NMEAParser as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift` or the Package list in Xcode.
 
 ```swift
 dependencies: [
@@ -66,7 +66,7 @@ struct YourApp: App {
 }
 ```
 
-Which identifiers are used will vary from one GNSS receiver to another. Here is a brief overview of the supported types (see `GGAData.Identifier`):
+The identifiers used will vary from one GNSS receiver to another. Here is a brief overview of the supported types (see `GGAData.Identifier`):
 
 ```swift
 public enum Identifier: String, CaseIterable {
@@ -79,7 +79,7 @@ public enum Identifier: String, CaseIterable {
 
 ### 4.2 Parsing NMEA Sentences
 
-Parsing NMEA sentences is processed by the `NMEAParserManager.shared` instance and has *one inferface* that is used for whichever NMEA sentence you want to process. The filtering logic and sending the sentence into the correct parser is handled by the `NMEAParserManager`. For parsing, you have two options:
+Parsing NMEA sentences is processed by the `NMEAParserManager.shared` instance and has *one interface* that is used for whichever NMEA sentence you want to process. The filtering logic and sending the sentence into the correct parser is handled by the `NMEAParserManager`. For parsing, you have two options:
 
 1. Parse an NMEA sentence already in `String` format
 
@@ -112,7 +112,7 @@ public func peripheral(_ peripheral: CBPeripheral,
 
 #### GGA Sentences
 
-The parsed GGA data will be exposed under two `AnyPublisher` instances (`ggaDataPublisher: AnyPublisher<GGAData, Never>` and `rawGGASentencePublisher: AnyPublisher<String, Never>`). These are available via `NMEAParserManager.shared`. *If you are unfamiliar with [The Combine Framework](https://developer.apple.com/documentation/combine) and it's Subjects, Publishers, and Cancellables, please read the linked documentation.*
+The parsed GGA data will be exposed under two `AnyPublisher` instances (`ggaDataPublisher: AnyPublisher<GGAData, Never>` and `rawGGASentencePublisher: AnyPublisher<String, Never>`). These are available via `NMEAParserManager.shared`. *If you are unfamiliar with [The Combine Framework](https://developer.apple.com/documentation/combine) and its Subjects, Publishers, and Cancellables, please read the linked documentation.*
 
 Example with `ggaDataPublisher` (for in-app display and use of data):
 ```swift
@@ -150,6 +150,6 @@ self.ggaCancellable = NMEAParserManager.shared.rawGGASentencePublisher
 
 ## 5 Contributing
 
-Contributions are welcome. To contribute, first open an issue where you explain the bug or feature in full detail. If you have performed the necessary changes, open a PR and I will review continuously. 
+Contributions are welcome. To contribute, first open an issue where you explain the bug or feature in full detail. If you have performed the necessary changes, open a PR, and I will review it continuously. 
 
-*note: pull requests will not be accepted if not following an acceptable standard regarding documentation, test-coverage, and code style. Use swiftlint to validate code styling (see Makefile).*
+*note: pull requests will not be accepted if they do not follow an acceptable standard regarding documentation, test coverage, and code style. Use Swiftlint to validate code styling (see Makefile).*
