@@ -98,17 +98,15 @@ public final class NMEAParserManager: @unchecked Sendable {
     
     // MARK: - Public Methods
     
-    /**
-     Attempts to parse a GGA sentence and publish the results.
-     
-     This method uses the `GGAParser` to parse the sentence. If parsing is successful,
-     it publishes the raw sentence via `rawGGASentenceSubject` and the parsed data via `ggaDataSubject`.
-     Parsing errors are logged if `verbose` is enabled.
-     
-     - Parameters:
-       - sentence: The raw GGA sentence string.
-       - verbose: Whether to print verbose logs. Defaults to `false`.
-     */
+    /// Attempts to parse a GGA sentence and publish the results.
+    ///
+    /// This method uses the `GGAParser` to parse the sentence. If parsing is successful,
+    /// it publishes the raw sentence via `rawGGASentenceSubject` and the parsed data via `ggaDataSubject`.
+    /// Parsing errors are logged if `verbose` is enabled.
+    ///
+    /// - Parameters:
+    ///   - sentence: The raw GGA sentence string.
+    ///   - verbose: Whether to print verbose logs. Defaults to `false`.
     func processGGASentence(_ sentence: String, verbose: Bool = false) {
         do {
             let parsedData = try ggaParser.parse(sentence: sentence)
@@ -119,28 +117,24 @@ public final class NMEAParserManager: @unchecked Sendable {
         }
     }
     
-    /**
-     Checks if the provided sentence is a supported GGA sentence.
-     
-     A sentence is considered supported if it starts with one of the enabled GGA identifiers.
-     
-     - Parameter sentence: The raw NMEA sentence.
-     - Returns: `true` if the sentence is a supported GGA sentence; otherwise, `false`.
-     */
+    /// Checks if the provided sentence is a supported GGA sentence.
+    ///
+    /// A sentence is considered supported if it starts with one of the enabled GGA identifiers.
+    ///
+    /// - Parameter sentence: The raw NMEA sentence.
+    /// - Returns: `true` if the sentence is a supported GGA sentence; otherwise, `false`.
     func isSupportedGGASentence(_ sentence: String) -> Bool {
         return supportedGGAIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
     }
     
-    /**
-     Attempts to parse an RMC sentence and publish the results.
-     
-     Uses the `RMCParser` to parse the sentence. On success, publishes the raw sentence and parsed data.
-     Parsing errors are logged if `verbose` is enabled.
-     
-     - Parameters:
-       - sentence: The raw RMC sentence string.
-       - verbose: Whether to print verbose logs. Defaults to `false`.
-     */
+    /// Attempts to parse an RMC sentence and publish the results.
+    ///
+    /// Uses the `RMCParser` to parse the sentence. On success, publishes the raw sentence and parsed data.
+    /// Parsing errors are logged if `verbose` is enabled.
+    ///
+    /// - Parameters:
+    ///   - sentence: The raw RMC sentence string.
+    ///   - verbose: Whether to print verbose logs. Defaults to `false`.
     func processRMCSentence(_ sentence: String, verbose: Bool = false) {
         do {
             let parsedData = try rmcParser.parse(sentence: sentence)
@@ -151,12 +145,10 @@ public final class NMEAParserManager: @unchecked Sendable {
         }
     }
     
-    /**
-     Checks if the provided sentence is a supported RMC sentence.
-     
-     - Parameter sentence: The raw NMEA sentence.
-     - Returns: `true` if the sentence is a supported RMC sentence; otherwise, `false`.
-     */
+    /// Checks if the provided sentence is a supported RMC sentence.
+    ///
+    /// - Parameter sentence: The raw NMEA sentence.
+    /// - Returns: `true` if the sentence is a supported RMC sentence; otherwise, `false`.
     func isSupportedRMCSentence(_ sentence: String) -> Bool {
         return supportedRMCSentenceIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
     }
