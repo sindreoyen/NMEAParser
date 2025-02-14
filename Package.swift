@@ -39,6 +39,5 @@ let package = Package(
             name: "NMEAParserTests",
             dependencies: ["NMEAParser"]
         ),
-    ],
-    swiftLanguageModes: [.v5, .v6]
+    ]
 )
