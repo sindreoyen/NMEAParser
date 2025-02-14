@@ -14,7 +14,7 @@ NMEAParser is a Swift package designed to validate and parse National Marine Ele
 - [x] Checksum Validation 
 - [x] Descriptions for Fix Types
 - [x] GGA Sentences
-- [ ] RMC Sentences (coming!)
+- [x] RMC Sentences
 - [ ] GSV Sentences (coming!)
 
 ## 2 Requirements
@@ -34,7 +34,7 @@ Once you set up your Swift package, adding NMEAParser as a dependency is as easy
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sindreoyen/NMEAParser.git", .upToNextMajor(from: "1.0.1"))
+    .package(url: "https://github.com/sindreoyen/NMEAParser.git", .upToNextMajor(from: "1.0.2"))
 ]
 ```
 
@@ -42,9 +42,7 @@ dependencies: [
 
 ### 4.1 Configuring the Parser Instance
 
-#### GGA Sentences
-
-You can configure which GGA identifiers you want to include by changing the `supportedGGAIdentifiers` property of the `NMEAParserManager`. E.g., in your App file:
+You can configure which GGA and RMC identifiers you want to include by changing the `supportedGGAIdentifiers` or `supportedRMCIdentifiers` properties of the `NMEAParserManager`. E.g., in your App file:
 
 ```swift
 import NMEAParser
@@ -62,19 +60,32 @@ struct YourApp: App {
     // MARK: - Init
     init() {
         NMEAParserManager.shared.supportedGGAIdentifiers = [.gnGGA, .gpGGA]
+        NMEAParserManager.shared.supportedRMCIdentifiers = [.gnRMC, .gpRMC]
     }
 }
 ```
 
-The identifiers used will vary from one GNSS receiver to another. Here is a brief overview of the supported types (see `GGAData.Identifier`):
+The identifiers used will vary from one GNSS receiver to another. Here is a brief overview of the supported types:
+
+##### From `GGAData.Identifier`
 
 ```swift
 public enum Identifier: String, CaseIterable {
-        case gnGGA = "$GNGGA" // GGA sentence from GPS and GLONASS
-        case gpGGA = "$GPGGA" // GGA sentence from GPS
-        case glGGA = "$GLGGA" // GGA sentence from GLONASS
-        case gaGGA = "$GAGGA" // GGA sentence from GALILEO
-    }
+    case gnGGA = "$GNGGA" // GGA sentence from GPS and GLONASS
+    case gpGGA = "$GPGGA" // GGA sentence from GPS
+    case glGGA = "$GLGGA" // GGA sentence from GLONASS
+    case gaGGA = "$GAGGA" // GGA sentence from GALILEO
+}
+```
+
+##### From  `RMCData.Identifier`
+```swift
+public enum Identifier: String, CaseIterable {
+    case gnRMC = "$GNRMC" // RMC sentence from GPS and GLONASS
+    case gpRMC = "$GPRMC" // RMC sentence from GPS
+    case glRMC = "$GLRMC" // RMC sentence from GLONASS
+    case gaRMC = "$GARMC" // RMC sentence from GALILEO
+}
 ```
 
 ### 4.2 Parsing NMEA Sentences
@@ -110,7 +121,7 @@ public func peripheral(_ peripheral: CBPeripheral,
 
 ### 4.3 Listening to Parsed Data
 
-#### GGA Sentences
+#### 4.3.1 GGA Sentences
 
 The parsed GGA data will be exposed under two `AnyPublisher` instances (`ggaDataPublisher: AnyPublisher<GGAData, Never>` and `rawGGASentencePublisher: AnyPublisher<String, Never>`). These are available via `NMEAParserManager.shared`. *If you are unfamiliar with [The Combine Framework](https://developer.apple.com/documentation/combine) and its Subjects, Publishers, and Cancellables, please read the linked documentation.*
 
@@ -143,6 +154,12 @@ self.ggaCancellable = NMEAParserManager.shared.rawGGASentencePublisher
                     self.sendGGAToCaster(ggaMessage)
                 }
 ```
+
+#### 4.3.2 RMC Sentences
+
+RMC data is subscribable via the `rmcDataPublisher: AnyPublisher<RMCData, Never>` property of the shared `NMEAParserManager` instance. 
+
+    Note: RMC data is not currently exposed via a raw stream. The GGA raw stream is intended for sending to NTRIP casters (if applicable), RMC is rare for this purpose. If you have the need for a raw stream of RMC data, submit an issue and I will look into it asap.
 
 ## 4.4 Communication
 
