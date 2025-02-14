@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.9.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 //
 //  Package.swift
@@ -39,6 +39,5 @@ let package = Package(
             name: "NMEAParserTests",
             dependencies: ["NMEAParser"]
         ),
-    ],
-    swiftLanguageModes: [.v5, .v6]
+    ]
 )
