@@ -1,4 +1,4 @@
-![NMEAParser logo](Resources/NMEAParserLogo.png)
+![NMEAParser logo](Resources/NMEAParserLogo-2.png)
 
 [![Swift](https://img.shields.io/badge/Swift-5.9_5.10_6.0-orange?style=flat-square)](https://img.shields.io/badge/Swift-5.9_5.10_6.0-Orange?style=flat-square)
 [![Platforms](https://img.shields.io/badge/Platforms-macOS_iOS_iPadOS-yellowgreen?style=flat-square)](https://img.shields.io/badge/Platforms-macOS_iOS-Green?style=flat-square)
