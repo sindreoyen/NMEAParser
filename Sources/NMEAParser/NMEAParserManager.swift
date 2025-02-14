@@ -44,17 +44,9 @@ public final class NMEAParserManager: @unchecked Sendable {
     /// Publishes successfully parsed `RMCData` objects.
     private let rmcDataSubject = PassthroughSubject<RMCData, Never>()
     
-    /// Publishes raw RMC sentences that have been successfully parsed.
-    private let rawRMCSentenceSubject = PassthroughSubject<String, Never>()
-    
     /// A publisher for parsed `RMCData`.
     public var rmcDataPublisher: AnyPublisher<RMCData, Never> {
         rmcDataSubject.eraseToAnyPublisher()
-    }
-    
-    /// A publisher for raw RMC sentences.
-    public var rawRMCSentencePublisher: AnyPublisher<String, Never> {
-        rawRMCSentenceSubject.eraseToAnyPublisher()
     }
     
     // MARK: Thread-Safe Identifier Configuration
@@ -75,7 +67,7 @@ public final class NMEAParserManager: @unchecked Sendable {
     }
     
     /// The enabled RMC sentence identifiers (thread-safe).
-    public var supportedRMCSentenceIdentifiers: Set<RMCData.Identifier> {
+    public var supportedRMCIdentifiers: Set<RMCData.Identifier> {
         get { syncQueue.sync { enabledRMCIdentifiers } }
         set { syncQueue.sync(flags: .barrier) { enabledRMCIdentifiers = newValue } }
     }
@@ -138,7 +130,6 @@ public final class NMEAParserManager: @unchecked Sendable {
     func processRMCSentence(_ sentence: String, verbose: Bool = false) {
         do {
             let parsedData = try rmcParser.parse(sentence: sentence)
-            rawRMCSentenceSubject.send(sentence)
             rmcDataSubject.send(parsedData)
         } catch {
             if verbose { print("Error parsing RMC sentence: \(error)") }
@@ -150,6 +141,6 @@ public final class NMEAParserManager: @unchecked Sendable {
     /// - Parameter sentence: The raw NMEA sentence.
     /// - Returns: `true` if the sentence is a supported RMC sentence; otherwise, `false`.
     func isSupportedRMCSentence(_ sentence: String) -> Bool {
-        return supportedRMCSentenceIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
+        return supportedRMCIdentifiers.contains { sentence.hasPrefix($0.rawValue) }
     }
 }
