@@ -61,4 +61,40 @@ public struct RMCData {
         case glRMC = "$GLRMC" // RMC sentence from GLONASS
         case gaRMC = "$GARMC" // RMC sentence from GALILEO
     }
+    
+    // MARK: - Init
+    /// The RMC sentence (Recommended Minimum Navigation Information) provides vital navigation data.
+    /// It contains the following information:
+    /// - Parameters:
+    ///   - time: The time the fix was taken, in hhmmss.ss format.
+    ///   - status: The validity status of the fix ('A' for active/valid, 'V' for void).
+    ///   - latitude: The latitude in degrees and minutes (converted to decimal degrees).
+    ///   - longitude: The longitude in degrees and minutes (converted to decimal degrees).
+    ///   - speedOverGround: The speed of the receiver over the ground, in knots.
+    ///   - courseOverGround: The true course over ground, in degrees.
+    ///   - date: The date of the fix, in ddmmyy format.
+    ///   - magneticVariation: The variation in the magnetic field, in degrees.
+    ///   - magneticVariationDirection: The direction of the magnetic variation ('E' for east, 'W' for west).
+    ///   - mode: An optional mode indicator providing additional navigational information.
+    public init(time: String?,
+                status: String?,
+                latitude: CLLocationDegrees,
+                longitude: CLLocationDegrees,
+                speedOverGround: Double?,
+                courseOverGround: Double?,
+                date: String?,
+                magneticVariation: Double?,
+                magneticVariationDirection: String?,
+                mode: String?) {
+        self.time = time
+        self.status = status
+        self.latitude = latitude
+        self.longitude = longitude
+        self.speedOverGround = speedOverGround
+        self.courseOverGround = courseOverGround
+        self.date = date
+        self.magneticVariation = magneticVariation
+        self.magneticVariationDirection = magneticVariationDirection
+        self.mode = mode
+    }
 }

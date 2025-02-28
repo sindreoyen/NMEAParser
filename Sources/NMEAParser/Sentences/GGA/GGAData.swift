@@ -52,4 +52,31 @@ public struct GGAData {
         case glGGA = "$GLGGA" // GGA sentence from GLONASS
         case gaGGA = "$GAGGA" // GGA sentence from GALILEO
     }
+    
+    // MARK: - Init
+    /// The GGA sentence (Global Positioning System Fix Data) provides essential fix data from a GNSS receiver.
+    /// It contains the following information:
+    /// - Parameters:
+    ///   - time: The time the fix was taken, in hhmmss.ss format.
+    ///   - latitude: The latitude in degrees and minutes (converted to decimal degrees).
+    ///   - longitude: The longitude in degrees and minutes (converted to decimal degrees).
+    ///   - fixType: The quality of the fix (e.g., autonomous, gps, dgps, rtkFloat, etc.).
+    ///   - satellitesUsed: The number of satellites used to compute the fix.
+    ///   - hdop: Horizontal Dilution of Precision, which indicates the quality of the GPS signal.
+    ///   - altitude: The altitude (in meters) above mean sea level.
+    public init(time: String?,
+                latitude: CLLocationDegrees,
+                longitude: CLLocationDegrees,
+                fixType: GGAFixType,
+                satellitesUsed: UInt8,
+                hdop: Double,
+                altitude: Double) {
+        self.time = time
+        self.latitude = latitude
+        self.longitude = longitude
+        self.fixType = fixType
+        self.satellitesUsed = satellitesUsed
+        self.hdop = hdop
+        self.altitude = altitude
+    }
 }
