@@ -5,7 +5,8 @@
 //  Created by Sindre on 12/02/2025.
 //
 
-public enum GGAFixType: UInt8 {
+public enum GGAFixType: UInt8, Codable {
+    
     // MARK: - Cases
     
     /// Invalid, no position available.
