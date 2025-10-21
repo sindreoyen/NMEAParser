@@ -5,7 +5,7 @@
 //  Created by Sindre on 08/11/2024.
 //
 
-import SwiftUICore
+import SwiftUI
 
 public extension GGAFixType {
     /// A detailed, human-readable description of the GNSS fix type.
